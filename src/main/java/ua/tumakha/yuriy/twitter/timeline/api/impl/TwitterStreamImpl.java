@@ -1,5 +1,6 @@
 package ua.tumakha.yuriy.twitter.timeline.api.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.core.Constants;
@@ -18,11 +19,14 @@ import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
 import ua.tumakha.yuriy.twitter.timeline.api.TwitterStream;
+import ua.tumakha.yuriy.twitter.timeline.model.TimelineStatus;
 import ua.tumakha.yuriy.twitter.timeline.web.socket.NewTweetsWebSocket;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
 
@@ -59,12 +63,25 @@ public class TwitterStreamImpl implements TwitterStream {
         final StatusListener listener1 = new StatusListener() {
             @Override
             public void onStatus(Status status) {
-                sockets.forEach(socket -> socket.send(status.toString()));
+                sendToSockets(TimelineStatus.valueOf(status));
             }
 
             @Override
             public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
-                sockets.forEach(socket -> socket.send("DELETED Status ID=" + statusDeletionNotice.getStatusId()));
+                Map<String,Object> data = new HashMap<>();
+                data.put("action", "onDeletionNotice");
+                data.put("statusId", statusDeletionNotice.getStatusId());
+                sendToSockets(data);
+            }
+
+            private void sendToSockets(Object object) {
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    String json = mapper.writeValueAsString(object);
+                    sockets.forEach(socket -> socket.send(json));
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(), e);
+                }
             }
 
             @Override

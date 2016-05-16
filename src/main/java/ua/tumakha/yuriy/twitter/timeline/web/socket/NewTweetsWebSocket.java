@@ -4,9 +4,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ua.tumakha.yuriy.twitter.timeline.api.TwitterStream;
 import ua.tumakha.yuriy.twitter.timeline.api.impl.TwitterStreamImpl;
 
 import javax.annotation.PreDestroy;
@@ -19,9 +17,6 @@ import javax.annotation.PreDestroy;
 public class NewTweetsWebSocket {
 
     private static final Logger LOG = LoggerFactory.getLogger(NewTweetsWebSocket.class);
-
-    @Autowired
-    private TwitterStream twitterStream;
 
     private Session session;
 
@@ -42,7 +37,7 @@ public class NewTweetsWebSocket {
     // called when a message received from the browser
     @OnWebSocketMessage
     public void handleMessage(String message) {
-        LOG.debug("Server got message: " + message);
+        LOG.info("Server got message: " + message);
     }
 
     // called in case of an error
