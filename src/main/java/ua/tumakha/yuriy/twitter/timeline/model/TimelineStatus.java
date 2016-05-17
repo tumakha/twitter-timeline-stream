@@ -4,6 +4,9 @@ import com.twitter.Autolink;
 import twitter4j.HashtagEntity;
 import twitter4j.Status;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -13,9 +16,11 @@ import java.util.Set;
  */
 public class TimelineStatus {
 
-    private long id;
+    private static final String DATE_FORMAT = "d MMM yyyy";
 
-    private long userId;
+    private String id;
+
+    private String userId;
 
     private String text;
 
@@ -23,13 +28,18 @@ public class TimelineStatus {
 
     private Date createdAt;
 
+    private String dateStr;
+
     public static TimelineStatus valueOf(Status status) {
         TimelineStatus ts = new TimelineStatus();
-        ts.setId(status.getId());
-        ts.setUserId(status.getUser() != null ? status.getUser().getId() : null);
+        ts.setId(String.valueOf(status.getId()));
+        if (status.getUser() != null) {
+            ts.setUserId(String.valueOf(status.getUser().getId()));
+        }
         Autolink linker = new Autolink();
         ts.setText(linker.autoLink(status.getText()));
         ts.setCreatedAt(status.getCreatedAt());
+
         HashtagEntity[] hashtagEntities = status.getHashtagEntities();
         if (hashtagEntities != null) {
             Set<String> textHashtags = new LinkedHashSet<>();
@@ -41,19 +51,19 @@ public class TimelineStatus {
         return ts;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -79,6 +89,16 @@ public class TimelineStatus {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+        DateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+        dateStr = formatter.format(createdAt);
+    }
+
+    public String getDateStr() {
+        return dateStr;
+    }
+
+    public void setDateStr(String dateStr) {
+        this.dateStr = dateStr;
     }
 
     @Override

@@ -17,7 +17,7 @@ ws.onmessage = function (evt) {
     console.log("PUSH from server: " + evt.data)
     var json = $.parseJSON(evt.data);
     if (json.action !== undefined && json.action !== null && json.action === 'onDeletionNotice') {
-        $('#tweet' + json.statusId).remove();
+        $('#tweets-list #' + json.statusId).remove();
     } else {
         // getting new tweet
         $("#tweets-list").prepend(tweetHtml(json));
@@ -40,21 +40,53 @@ function sendToServer(msg) {
 }
 
 $(function() {
-    $.get( "api/statuses")
+    getStatuses(-1);
+    $('.timeline-LoadMore-button').hide();
+    $('.timeline-LoadMore-endOfTimelineMessage').hide();
+    $('.timeline-LoadMore').show();
+});
+
+function getStatuses(maxId) {
+    var url = "api/statuses";
+    if (maxId != -1) {
+        url += '?maxId=' + maxId;
+    }
+    $.get( url )
         .done(function( data ) {
             $.each(data, function(i, status) {
                 $("#tweets-list").append(tweetHtml(status));
             });
+            prepareLoadMore(data.length > 99, maxId == -1);
         })
         .fail(function( error ) {
             console.log("AJAX ERROR: ", error );
         });
-});
+}
+
+function prepareLoadMore(isMore, isFirstPage) {
+    if (isMore) {
+        $('.timeline-LoadMore-button').show();
+        $('.timeline-LoadMore-endOfTimelineMessage').hide();
+    } else if (!isFirstPage) {
+        $('.timeline-LoadMore-button').hide();
+        $('.timeline-LoadMore-endOfTimelineMessage').show();
+    }
+}
+
+function loadMoreTweets() {
+    $('.timeline-LoadMore-button').hide();
+    $('.timeline-LoadMore-button').blur();
+
+    var maxId = $('#tweets-list li:last').attr('id');
+    console.log("maxId=" + maxId);
+    getStatuses(maxId);
+}
 
 function tweetHtml(status) {
-    return '<li id="tweet' + status.id + '" class="ui-btn">' +
-    '<p>' + status.text + '</p>' +
-    '<p class="ui-li-aside"><div class="Twitter-Icon" role="presentation"></div></p>' +
+    return '<li id="' + status.id + '" class="ui-btn">' +
+        '<div class="Twitter-Icon"></div>' +
+        '<p>' + status.text + '</p>' +
+        '<div class="Twitter-Time">' + status.dateStr + '</div>' +
     '</li>';
 }
 

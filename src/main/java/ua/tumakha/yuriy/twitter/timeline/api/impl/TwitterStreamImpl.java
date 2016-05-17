@@ -68,9 +68,9 @@ public class TwitterStreamImpl implements TwitterStream {
 
             @Override
             public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
-                Map<String,Object> data = new HashMap<>();
+                Map<String, String> data = new HashMap<>();
                 data.put("action", "onDeletionNotice");
-                data.put("statusId", statusDeletionNotice.getStatusId());
+                data.put("statusId", String.valueOf(statusDeletionNotice.getStatusId()));
                 sendToSockets(data);
             }
 

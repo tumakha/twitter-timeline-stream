@@ -50,7 +50,7 @@ public class RestController {
         }
 
         List<Status> statuses = twitterClient.getUserTimeline(twitterUserId, paging);
-        LOG.info("Fetched {} statuses", statuses.size());
+        LOG.debug("Fetched {} statuses", statuses.size());
         List<TimelineStatus> timelineStatuses = statuses.stream().map(status -> TimelineStatus.valueOf(status))
                 .collect(Collectors.toList());
 

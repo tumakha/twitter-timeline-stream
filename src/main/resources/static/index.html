@@ -12,13 +12,17 @@
 </head>
 <body>
 
-    <div style="width: 600px; height: 800px; margin: 2em auto;">
+    <div class="timeline-container">
         <form class="ui-filterable">
             <input id="tweetFilter" data-type="search" placeholder="filter tweets by keyword...">
         </form>
 
-        <ul id="tweets-list" data-role="listview" data-filter="true" data-input="#tweetFilter">
-        </ul>
+        <ul id="tweets-list" data-role="listview" data-filter="true" data-input="#tweetFilter"></ul>
+
+        <div class="timeline-LoadMore">
+            <button class="timeline-LoadMore-button" onclick="loadMoreTweets();">Load more Tweets</button>
+            <p class="timeline-LoadMore-endOfTimelineMessage">There are no more Tweets in this timeline.</p>
+        </div>
     </div>
 
 </body>
