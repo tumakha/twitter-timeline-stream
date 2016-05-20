@@ -13,6 +13,7 @@ import com.twitter.hbc.twitter4j.Twitter4jStatusClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -34,7 +35,7 @@ import java.util.concurrent.*;
  * @author Yuriy Tumakha
  */
 @Component
-public class TwitterStreamImpl implements TwitterStream {
+public class TwitterStreamImpl implements TwitterStream, CommandLineRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(TwitterStreamImpl.class);
 
@@ -57,8 +58,8 @@ public class TwitterStreamImpl implements TwitterStream {
 
     private Twitter4jStatusClient t4jClient;
 
-    @PostConstruct
-    public void initStream() {
+    @Override
+    public void run(String... strings) throws Exception {
 
         final StatusListener listener1 = new StatusListener() {
             @Override
