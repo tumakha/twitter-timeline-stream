@@ -23,7 +23,6 @@ import ua.tumakha.yuriy.twitter.timeline.api.TwitterStream;
 import ua.tumakha.yuriy.twitter.timeline.model.TimelineStatus;
 import ua.tumakha.yuriy.twitter.timeline.web.socket.NewTweetsWebSocket;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.HashMap;
 import java.util.List;
