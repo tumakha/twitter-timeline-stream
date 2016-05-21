@@ -19,7 +19,6 @@ import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
-import ua.tumakha.yuriy.twitter.timeline.api.TwitterStream;
 import ua.tumakha.yuriy.twitter.timeline.model.TimelineStatus;
 import ua.tumakha.yuriy.twitter.timeline.web.socket.NewTweetsWebSocket;
 
@@ -34,7 +33,7 @@ import java.util.concurrent.*;
  * @author Yuriy Tumakha
  */
 @Component
-public class TwitterStreamImpl implements TwitterStream, CommandLineRunner {
+public class TwitterStreamImpl implements CommandLineRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(TwitterStreamImpl.class);
 
